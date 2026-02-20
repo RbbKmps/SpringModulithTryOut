@@ -1,5 +1,6 @@
 package com.modulith.demo.notification.core.usecase;
 
+import com.modulith.demo.post.core.ports.driving.CommentAdded;
 import com.modulith.demo.post.core.ports.driving.PostCreated;
 import com.modulith.demo.user.core.ports.driving.UserAPI;
 import lombok.extern.slf4j.Slf4j;
@@ -21,12 +22,18 @@ public class NotificationService {
 
         String author = userAPI.getUsernameById(post.authorId());
 
-        log.info("EVENT:");
+        log.info("POST CREATED EVENT:");
         log.info("A POST WAS CREATED: {}", post.body());
 
         post.tags().forEach(userId -> {
             String username = userAPI.getUsernameById(userId);
             log.info("USER {} HAS BEEN TAGGED BY {}", username, author);
         });
+    }
+
+    @ApplicationModuleListener
+    public void onCommentAdded(CommentAdded event) {
+        log.info("POST RECEIVED COMMENT EVENT:");
+        log.info("YOUR POST WITH ID {} HAS RECEIVED A COMMENT FROM {}", event.postId(), event.username());
     }
 }
