@@ -13,4 +13,6 @@ public interface UserAPI {
     List<User> getUsers();
 
     Boolean getUserExists(Long userId);
+
+    Boolean getUsernameExists(String username);
 }

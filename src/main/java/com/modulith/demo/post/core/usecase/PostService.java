@@ -1,6 +1,8 @@
 package com.modulith.demo.post.core.usecase;
 
+import com.modulith.demo.post.core.domain.Comment;
 import com.modulith.demo.post.core.ports.driven.UserLookupPort;
+import com.modulith.demo.post.core.ports.driving.CommentAdded;
 import com.modulith.demo.post.core.ports.driving.PostAPI;
 import com.modulith.demo.post.core.ports.driving.PostCreated;
 import com.modulith.demo.post.core.domain.Post;
@@ -8,6 +10,7 @@ import com.modulith.demo.post.core.ports.driving.PostDTO;
 import com.modulith.demo.post.core.ports.driven.PostPersistencePort;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +46,25 @@ public class PostService implements PostAPI {
         postPersistencePort.save(post);
 
         events.publishEvent(new PostCreated(postDTO));
+    }
+
+    @Transactional
+    @Override
+    public Post addComment(Long postId, Comment comment) {
+        Optional<Post> post = postPersistencePort.findById(postId);
+        if (post.isEmpty()) {
+            throw new IllegalArgumentException("Post with id " + postId + " does not exist");
+        }
+
+        if (!userLookupPort.usernameExists(comment.userName)) {
+            throw new IllegalArgumentException("User " + comment.userName + " does not exist");
+        }
+
+        post.get().addComment(comment);
+
+        events.publishEvent(new CommentAdded(postId, comment.userName));
+
+        return postPersistencePort.save(post.get());
     }
 
     public List<Post> findAll() {

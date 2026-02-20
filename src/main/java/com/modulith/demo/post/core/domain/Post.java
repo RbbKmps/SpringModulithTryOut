@@ -1,13 +1,14 @@
 package com.modulith.demo.post.core.domain;
 
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 
 @Entity
 @Getter
@@ -18,8 +19,12 @@ public class Post {
     @NonNull private String body;
     private Long authorId;
     @NonNull private List<Long> tags;
+    @ElementCollection
+    private List<Comment> comments;
 
-    public Post() {}
+    public Post() {
+        this.comments = new ArrayList<>();
+    }
 
     public void setAuthorId(@NonNull Long authorId) {
         if (this.authorId != null) {
@@ -37,5 +42,9 @@ public class Post {
 
     public void setTags(@NonNull List<Long> tags) {
         this.tags = tags;
+    }
+
+    public void addComment(@NonNull Comment comment) {
+        this.comments.add(comment);
     }
 }
