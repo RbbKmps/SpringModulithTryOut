@@ -18,6 +18,7 @@ public class Post {
     @NonNull private String body;
     private Long authorId;
     @NonNull private List<Long> tags;
+    private List<Comment> comments;
 
     public Post() {}
 
@@ -37,5 +38,9 @@ public class Post {
 
     public void setTags(@NonNull List<Long> tags) {
         this.tags = tags;
+    }
+
+    public void addComment(@NonNull Comment comment) {
+        this.comments.add(comment);
     }
 }
