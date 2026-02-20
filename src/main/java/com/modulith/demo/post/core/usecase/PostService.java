@@ -1,5 +1,6 @@
 package com.modulith.demo.post.core.usecase;
 
+import com.modulith.demo.post.core.domain.Comment;
 import com.modulith.demo.post.core.ports.driven.UserLookupPort;
 import com.modulith.demo.post.core.ports.driving.PostAPI;
 import com.modulith.demo.post.core.ports.driving.PostCreated;
@@ -8,6 +9,7 @@ import com.modulith.demo.post.core.ports.driving.PostDTO;
 import com.modulith.demo.post.core.ports.driven.PostPersistencePort;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +46,16 @@ public class PostService implements PostAPI {
 
         events.publishEvent(new PostCreated(postDTO));
     }
+
+    @Override
+    public Post addComment(Long postId, Comment comment) {
+        Optional<Post> post = postPersistencePort.findById(postId);
+        if (post.isPresent()) {
+            post.get().addComment(comment);
+            return postPersistencePort.save(post.get());
+        }
+        throw new IllegalArgumentException("Post with id " + postId + " does not exist");
+    };
 
     public List<Post> findAll() {
         return postPersistencePort.findAll();
