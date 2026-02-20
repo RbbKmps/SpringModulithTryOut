@@ -23,7 +23,7 @@ public class Post {
     private List<Comment> comments;
 
     public Post() {
-        this.comments = new ArrayList<Comment>();
+        this.comments = new ArrayList<>();
     }
 
     public void setAuthorId(@NonNull Long authorId) {

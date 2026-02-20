@@ -55,7 +55,7 @@ public class PostService implements PostAPI {
             return postPersistencePort.save(post.get());
         }
         throw new IllegalArgumentException("Post with id " + postId + " does not exist");
-    };
+    }
 
     public List<Post> findAll() {
         return postPersistencePort.findAll();

@@ -10,10 +10,5 @@ public class Comment implements ValueObject {
     public String userName;
     public String body;
 
-    public Comment(String userName, String body) {
-        this.userName = userName;
-        this.body = body;
-    }
-
     public Comment() {}
 }

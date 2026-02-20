@@ -2,7 +2,6 @@ package com.modulith.demo.post.adapters.driving;
 
 import com.modulith.demo.post.core.domain.Comment;
 import com.modulith.demo.post.core.ports.driving.PostAPI;
-import com.modulith.demo.post.core.usecase.PostService;
 import com.modulith.demo.post.core.domain.Post;
 import com.modulith.demo.post.core.ports.driving.PostDTO;
 import java.util.List;
@@ -37,5 +36,5 @@ public class PostController {
     @PutMapping("/{postId}/comment")
     public Post addComment(@PathVariable Long postId, @RequestBody Comment comment) {
         return postAPI.addComment(postId, comment);
-    };
+    }
 }
