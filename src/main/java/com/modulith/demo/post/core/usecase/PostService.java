@@ -2,6 +2,7 @@ package com.modulith.demo.post.core.usecase;
 
 import com.modulith.demo.post.core.domain.Comment;
 import com.modulith.demo.post.core.ports.driven.UserLookupPort;
+import com.modulith.demo.post.core.ports.driving.CommentAdded;
 import com.modulith.demo.post.core.ports.driving.PostAPI;
 import com.modulith.demo.post.core.ports.driving.PostCreated;
 import com.modulith.demo.post.core.domain.Post;
@@ -47,14 +48,23 @@ public class PostService implements PostAPI {
         events.publishEvent(new PostCreated(postDTO));
     }
 
+    @Transactional
     @Override
     public Post addComment(Long postId, Comment comment) {
         Optional<Post> post = postPersistencePort.findById(postId);
-        if (post.isPresent()) {
-            post.get().addComment(comment);
-            return postPersistencePort.save(post.get());
+        if (post.isEmpty()) {
+            throw new IllegalArgumentException("Post with id " + postId + " does not exist");
         }
-        throw new IllegalArgumentException("Post with id " + postId + " does not exist");
+
+        if (!userLookupPort.usernameExists(comment.userName)) {
+            throw new IllegalArgumentException("User " + comment.userName + " does not exist");
+        }
+
+        post.get().addComment(comment);
+
+        events.publishEvent(new CommentAdded(postId, comment.userName));
+
+        return postPersistencePort.save(post.get());
     }
 
     public List<Post> findAll() {

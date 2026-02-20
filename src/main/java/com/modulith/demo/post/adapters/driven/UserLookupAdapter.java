@@ -16,4 +16,9 @@ public class UserLookupAdapter implements UserLookupPort {
     public Boolean userExists(Long userId) {
         return userAPI.getUserExists(userId);
     }
+
+    @Override
+    public Boolean usernameExists(String username) {
+        return userAPI.getUsernameExists(username);
+    }
 }

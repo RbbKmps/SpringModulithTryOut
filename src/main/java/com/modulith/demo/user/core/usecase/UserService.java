@@ -48,4 +48,9 @@ public class UserService implements UserAPI {
     public Boolean getUserExists(Long userId) {
         return userPersistencePort.findById(userId).isPresent();
     }
+
+    @Override
+    public Boolean getUsernameExists(String username) {
+        return userPersistencePort.findByUsername(username).isPresent();
+    }
 }
