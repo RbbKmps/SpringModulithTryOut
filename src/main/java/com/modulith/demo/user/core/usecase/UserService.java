@@ -18,6 +18,11 @@ public class UserService implements UserAPI {
 
     @Override
     public User createUser(UserDTO userDTO) {
+        Optional<User> existingUser = userPersistencePort.findByEmail(userDTO.email());
+        if (existingUser.isPresent()) {
+            throw new IllegalArgumentException("There is already a user with the email " + userDTO.email());
+        }
+
         User user = new User();
         user.setEmail(userDTO.email());
         user.setUsername(userDTO.username());
