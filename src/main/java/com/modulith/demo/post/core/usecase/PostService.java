@@ -39,11 +39,8 @@ public class PostService implements PostAPI {
             throw new IllegalArgumentException("User with id " + postDTO.authorId() + " does not exist");
         }
 
-        Post post = new Post();
-        post.setBody(postDTO.body());
-        post.setAuthorId(postDTO.authorId());
-        post.setTags(postDTO.tags());
-        postPersistencePort.save(post);
+        Post mappedPost = PostMapper.INSTANCE.postDTOToPost(postDTO);
+        postPersistencePort.save(mappedPost);
 
         events.publishEvent(new PostCreated(postDTO));
     }

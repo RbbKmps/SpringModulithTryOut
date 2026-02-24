@@ -20,11 +20,5 @@ public class User {
     @Setter
     private String email;
 
-    public User(Long userId, String username, String email) {
-        this.userId = userId;
-        this.username = username;
-        this.email = email;
-    }
-
     public User() {}
 }
