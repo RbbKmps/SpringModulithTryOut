@@ -28,11 +28,10 @@ public class UserService implements UserAPI {
             throw new IllegalArgumentException("There is already a user with the username " + userDTO.username());
         }
 
-        User user = new User();
-        user.setEmail(userDTO.email());
-        user.setUsername(userDTO.username());
-        userPersistencePort.save(user);
-        return user;
+        User mappedUser = UserMapper.INSTANCE.userDTOToUser(userDTO);
+        userPersistencePort.save(mappedUser);
+
+        return mappedUser;
     }
 
     @Override
