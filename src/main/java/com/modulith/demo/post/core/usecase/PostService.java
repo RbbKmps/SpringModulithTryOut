@@ -1,13 +1,13 @@
 package com.modulith.demo.post.core.usecase;
 
 import com.modulith.demo.post.core.domain.Comment;
-import com.modulith.demo.post.core.ports.driven.UserLookupPort;
 import com.modulith.demo.post.core.ports.driving.CommentAdded;
 import com.modulith.demo.post.core.ports.driving.PostAPI;
 import com.modulith.demo.post.core.ports.driving.PostCreated;
 import com.modulith.demo.post.core.domain.Post;
 import com.modulith.demo.post.core.ports.driving.PostDTO;
 import com.modulith.demo.post.core.ports.driven.PostPersistencePort;
+import com.modulith.demo.user.core.ports.driving.UserAPI;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -17,12 +17,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class PostService implements PostAPI {
     private final PostPersistencePort postPersistencePort;
-    private final UserLookupPort userLookupPort;
+    private final UserAPI userAPI;
     private final ApplicationEventPublisher events;
 
-    public PostService(PostPersistencePort postPersistencePort, UserLookupPort userLookupPort, ApplicationEventPublisher events) {
+    public PostService(PostPersistencePort postPersistencePort, UserAPI userAPI, ApplicationEventPublisher events) {
         this.postPersistencePort = postPersistencePort;
-        this.userLookupPort = userLookupPort;
+        this.userAPI = userAPI;
         this.events = events;
     }
 
@@ -30,12 +30,12 @@ public class PostService implements PostAPI {
     @Override
     public void create(PostDTO postDTO) {
         postDTO.tags().forEach(tag -> {
-            if (!userLookupPort.userExists(tag)) {
+            if (!userAPI.getUserExists(tag)) {
                 throw new IllegalArgumentException("User with id " + tag + " does not exist");
             }
         });
 
-        if (!userLookupPort.userExists(postDTO.authorId())) {
+        if (!userAPI.getUserExists(postDTO.authorId())) {
             throw new IllegalArgumentException("User with id " + postDTO.authorId() + " does not exist");
         }
 
@@ -56,7 +56,7 @@ public class PostService implements PostAPI {
             throw new IllegalArgumentException("Post with id " + postId + " does not exist");
         }
 
-        if (!userLookupPort.usernameExists(comment.userName)) {
+        if (!userAPI.getUsernameExists(comment.userName)) {
             throw new IllegalArgumentException("User " + comment.userName + " does not exist");
         }
 

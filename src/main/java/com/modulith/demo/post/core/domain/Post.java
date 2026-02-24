@@ -16,9 +16,15 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long  postId;
-    @NonNull private String body;
+
+    @NonNull
+    private String body;
+
     private Long authorId;
-    @NonNull private List<Long> tags;
+
+    @NonNull
+    private List<Long> tags;
+
     @ElementCollection
     private List<Comment> comments;
 
