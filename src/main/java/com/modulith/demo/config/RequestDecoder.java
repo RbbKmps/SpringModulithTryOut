@@ -2,6 +2,7 @@ package com.modulith.demo.config;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
@@ -24,15 +25,15 @@ public class RequestDecoder extends RequestBodyAdviceAdapter {
     Logger logger = LoggerFactory.getLogger(RequestDecoder.class);
 
     @Override
-    public boolean supports(MethodParameter methodParameter, Type targetType,
-                            Class<? extends HttpMessageConverter<?>> converterType) {
+    public boolean supports(@NonNull MethodParameter methodParameter, @NonNull Type targetType,
+                            @NonNull Class<? extends HttpMessageConverter<?>> converterType) {
         var attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         return attributes != null && Set.of("POST", "PUT", "PATCH").contains(attributes.getRequest().getMethod());
     }
 
     @Override
-    public HttpInputMessage beforeBodyRead(HttpInputMessage inputMessage, MethodParameter parameter,
-                                           Type targetType, Class<? extends HttpMessageConverter<?>> converterType) throws IOException {
+    public HttpInputMessage beforeBodyRead(@NonNull HttpInputMessage inputMessage, @NonNull MethodParameter parameter,
+                                           @NonNull Type targetType, @NonNull Class<? extends HttpMessageConverter<?>> converterType) throws IOException {
 
         return new HttpInputMessage() {
             @Override
