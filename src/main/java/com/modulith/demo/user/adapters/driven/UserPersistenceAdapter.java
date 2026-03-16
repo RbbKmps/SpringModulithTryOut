@@ -4,6 +4,7 @@ import com.modulith.demo.user.core.domain.User;
 import com.modulith.demo.user.core.ports.driven.UserPersistencePort;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,7 +26,7 @@ public class UserPersistenceAdapter implements UserPersistencePort {
     }
 
     @Override
-    public Optional<User> findById(Long id) {
+    public Optional<User> findById(UUID id) {
         return userRepository.findById(id);
     }
 
