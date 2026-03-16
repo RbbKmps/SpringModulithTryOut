@@ -1,5 +1,6 @@
 package com.modulith.demo.post.core.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -14,16 +16,17 @@ import lombok.NonNull;
 @Getter
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long  postId;
+    @GeneratedValue
+    @Column(columnDefinition = "UUID")
+    private UUID postId;
 
     @NonNull
     private String body;
 
-    private Long authorId;
+    private UUID authorId;
 
     @NonNull
-    private List<Long> tags;
+    private List<UUID> tags;
 
     @ElementCollection
     private List<Comment> comments;
@@ -32,7 +35,7 @@ public class Post {
         this.comments = new ArrayList<>();
     }
 
-    public void setAuthorId(@NonNull Long authorId) {
+    public void setAuthorId(@NonNull UUID authorId) {
         if (this.authorId != null) {
             throw new IllegalArgumentException("This post already has an author");
         }
@@ -46,7 +49,7 @@ public class Post {
         this.body = body;
     }
 
-    public void setTags(@NonNull List<Long> tags) {
+    public void setTags(@NonNull List<UUID> tags) {
         this.tags = tags;
     }
 

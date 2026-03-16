@@ -11,6 +11,7 @@ import com.modulith.demo.user.core.ports.driving.UserAPI;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +48,7 @@ public class PostService implements PostAPI {
 
     @Transactional
     @Override
-    public Post addComment(Long postId, Comment comment) {
+    public Post addComment(UUID postId, Comment comment) {
         Optional<Post> post = postPersistencePort.findById(postId);
         if (post.isEmpty()) {
             throw new IllegalArgumentException("Post with id " + postId + " does not exist");

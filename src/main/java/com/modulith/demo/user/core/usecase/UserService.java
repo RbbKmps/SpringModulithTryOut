@@ -6,6 +6,7 @@ import com.modulith.demo.user.core.ports.driving.UserDTO;
 import com.modulith.demo.user.core.domain.User;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,7 +36,7 @@ public class UserService implements UserAPI {
     }
 
     @Override
-    public String getUsernameById(Long id) {
+    public String getUsernameById(UUID id) {
         Optional<User> user = userPersistencePort.findById(id);
         if (user.isPresent()) {
             return user.get().getUsername();
@@ -49,7 +50,7 @@ public class UserService implements UserAPI {
     }
 
     @Override
-    public Boolean getUserExists(Long userId) {
+    public Boolean getUserExists(UUID userId) {
         return userPersistencePort.findById(userId).isPresent();
     }
 

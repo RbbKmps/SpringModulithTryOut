@@ -4,6 +4,7 @@ import com.modulith.demo.post.core.domain.Post;
 import com.modulith.demo.post.core.ports.driven.PostPersistencePort;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,7 +26,7 @@ public class PostPersistenceAdapter implements PostPersistencePort {
     }
 
     @Override
-    public Optional<Post> findById(Long postId) {
+    public Optional<Post> findById(UUID postId) {
         return postRepository.findById(postId);
     }
 }

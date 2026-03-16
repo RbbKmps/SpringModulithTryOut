@@ -5,6 +5,7 @@ import com.modulith.demo.post.core.ports.driving.PostAPI;
 import com.modulith.demo.post.core.domain.Post;
 import com.modulith.demo.post.core.ports.driving.PostDTO;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +35,7 @@ public class PostController {
     }
 
     @PutMapping("/{postId}/comment")
-    public Post addComment(@PathVariable Long postId, @RequestBody Comment comment) {
+    public Post addComment(@PathVariable UUID postId, @RequestBody Comment comment) {
         return postAPI.addComment(postId, comment);
     }
 }
