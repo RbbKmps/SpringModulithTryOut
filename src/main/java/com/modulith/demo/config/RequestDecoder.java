@@ -1,10 +1,7 @@
 package com.modulith.demo.config;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import org.jspecify.annotations.NonNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
@@ -22,8 +19,6 @@ import java.util.Base64;
 
 @ControllerAdvice
 public class RequestDecoder extends RequestBodyAdviceAdapter {
-    Logger logger = LoggerFactory.getLogger(RequestDecoder.class);
-
     @Override
     public boolean supports(@NonNull MethodParameter methodParameter, @NonNull Type targetType,
                             @NonNull Class<? extends HttpMessageConverter<?>> converterType) {
@@ -39,12 +34,8 @@ public class RequestDecoder extends RequestBodyAdviceAdapter {
             @Override
             public InputStream getBody() throws IOException {
                 byte[] encodedBytes = inputMessage.getBody().readAllBytes();
-                String encodedString = new String(encodedBytes, StandardCharsets.UTF_8);
-                logger.info("Incoming: {}", encodedString);
 
                 byte[] decodedBytes = Base64.getDecoder().decode(encodedBytes);
-                String decodedString = new String(decodedBytes, StandardCharsets.UTF_8);
-                logger.info("Successfully Decoded Payload: {}", decodedString);
 
                 return new ByteArrayInputStream(decodedBytes);
             }
