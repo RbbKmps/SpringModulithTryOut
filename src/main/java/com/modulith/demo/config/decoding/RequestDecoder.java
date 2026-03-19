@@ -1,5 +1,7 @@
-package com.modulith.demo.config;
+package com.modulith.demo.config.decoding;
 
+import com.modulith.demo.config.decoding.strategies.DecodingStrategy;
+import java.util.List;
 import java.util.Set;
 import org.jspecify.annotations.NonNull;
 import org.springframework.core.MethodParameter;
@@ -19,6 +21,12 @@ import java.util.Base64;
 
 @ControllerAdvice
 public class RequestDecoder extends RequestBodyAdviceAdapter {
+    private final List<DecodingStrategy> strategies;
+
+    public RequestDecoder(List<DecodingStrategy> strategies) {
+        this.strategies = strategies;
+    }
+
     @Override
     public boolean supports(@NonNull MethodParameter methodParameter, @NonNull Type targetType,
                             @NonNull Class<? extends HttpMessageConverter<?>> converterType) {
@@ -35,7 +43,14 @@ public class RequestDecoder extends RequestBodyAdviceAdapter {
             public InputStream getBody() throws IOException {
                 byte[] encodedBytes = inputMessage.getBody().readAllBytes();
 
-                byte[] decodedBytes = Base64.getDecoder().decode(encodedBytes);
+                String encodingType = inputMessage.getHeaders().getFirst("Encoding-Strategy");
+
+                DecodingStrategy strategy = strategies.stream()
+                        .filter(option -> option.supports(encodingType))
+                        .findFirst()
+                        .orElse(null);
+
+                byte[] decodedBytes = strategy.decode(encodedBytes);
 
                 return new ByteArrayInputStream(decodedBytes);
             }
